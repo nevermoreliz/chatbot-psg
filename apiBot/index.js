@@ -1,7 +1,13 @@
+require("dotenv").config();
 const express = require("express");
-const app = express();
+const cors = require('cors');
 
+const app = express();
 const PORT = process.env.PORT ?? 4000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
+
+
 
 /**
  * Clase de API REST
@@ -20,7 +26,15 @@ class ServerBotAPI {
       req.db = this.providerDB
       next()
     }
-    app.use(express.json())
+
+    app.use(cors());
+    app.use(express.json());
+    app.use(express.static("storage"));
+
+
+    /**
+     * Aqui invocamos a las rutas! 😎
+     */
     app.use("/api", middleware, require("./routes"));
     // app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
     app.listen(PORT, () => console.log(`http://localhost:${PORT}/api/qr`));
